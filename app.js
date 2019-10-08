@@ -126,7 +126,8 @@ var uiController = (function() {
     expenseLabel: ".budget__expenses--value",
     percentageLabel: ".budget__expenses--percentage",
     container: ".container",
-    expensePercLabel: ".item__percentage"
+    expensePercLabel: ".item__percentage",
+    dateLabel: ".budget__title--month"
   };
   return {
     getInput: function() {
@@ -184,7 +185,7 @@ var uiController = (function() {
         budgetObj.totalExp;
       if (budgetObj.percentage > 0) {
         document.querySelector(_DOMstrings.percentageLabel).textContent =
-          budgetObj.percentage;
+          budgetObj.percentage + "%";
       } else {
         document.querySelector(_DOMstrings.percentageLabel).textContent = "---";
       }
@@ -216,6 +217,14 @@ var uiController = (function() {
           current.textContent = "---";
         }
       });
+    },
+    displayMonth: function() {
+      var now, month, year;
+      now = new Date();
+      month = now.toLocaleString(navigator.language, { month: "long" });
+      year = now.getFullYear();
+      document.querySelector(_DOMstrings.dateLabel).textContent =
+        month + ", " + year;
     },
     getDOMstrings: function() {
       return _DOMstrings;
@@ -299,6 +308,7 @@ var appController = (function(budgetCtrl, uiCtrl) {
   return {
     init: function() {
       _setupEventListeners();
+      uiCtrl.displayMonth();
       uiCtrl.displayBudget({
         budget: 0,
         totalIncome: 0,
