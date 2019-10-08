@@ -125,7 +125,8 @@ var uiController = (function() {
     incomeLabel: ".budget__income--value",
     expenseLabel: ".budget__expenses--value",
     percentageLabel: ".budget__expenses--percentage",
-    container: ".container"
+    container: ".container",
+    expensePercLabel: ".item__percentage"
   };
   return {
     getInput: function() {
@@ -188,6 +189,34 @@ var uiController = (function() {
         document.querySelector(_DOMstrings.percentageLabel).textContent = "---";
       }
     },
+    displayPercentages: function(allPercentages) {
+      // Read all percentage fields from DOM
+      var fields = document.querySelectorAll(_DOMstrings.expensePercLabel);
+
+      // Loop over the percentage DOM fields and update with percentage fields
+      //Custom forEach
+
+      /* var nodeListForEach = function(list, callback) {
+        for (var i = 0; i < list.length; i++) {
+          callback(list[i], i);
+        }
+      };
+
+      nodeListForEach(fields, function(current, index) {
+        if (allPercentages[index] > 0) {
+          current.textContent = allPercentages[index] + "%";
+        } else current.textContent = "---";
+      }); */
+
+      //Prototype forEach
+      Array.prototype.forEach.call(fields, function(current, index) {
+        if (allPercentages[index] > 0) {
+          current.textContent = allPercentages[index] + "%";
+        } else {
+          current.textContent = "---";
+        }
+      });
+    },
     getDOMstrings: function() {
       return _DOMstrings;
     }
@@ -240,12 +269,13 @@ var appController = (function(budgetCtrl, uiCtrl) {
     }
   };
   var _calculatePercentages = function() {
-    // Calculate percentage of each expense
+    // Calculate percentage of each expense - Update DS
     budgetCtrl.calculateAllPercentages();
-    // Update DS
     // Return percentages
-    //Update UI
+    var allPercentages = budgetCtrl.getAllPercentages();
+    uiCtrl.displayPercentages(allPercentages);
   };
+
   var _ctrlDeleteItem = function(event) {
     var itemID, splitID, id, type;
 
